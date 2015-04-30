@@ -62,14 +62,19 @@ def best_graph(input_num_str, num_vertices_str, non_path_val):
 
         #assigning colors to vertices
         colors = ""
-        red = True 
-        for i in range(num_vertices):
-            if red:
+        red = 0 
+        for i in range(num_vertices - 1):
+            if red >= 2:
                 colors += "R"
-                red = False
+                if red == 2:
+                    red += 1
+                else:
+                    red = 0
+
             else:
                 colors += "B"
-                red = True
+                red += 1
+        colors += "R"
         file.write(colors)
         file.close()
     except Exception as e:

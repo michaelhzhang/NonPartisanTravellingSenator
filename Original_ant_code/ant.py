@@ -3,7 +3,7 @@ import random
 import sys
 from threading import *
 
-class Ant(Thread):
+class Ant(Thread): # Each ant is its own thread of execution
     def __init__(self, ID, start_node, colony):
         Thread.__init__(self)
         self.ID = ID
@@ -12,25 +12,25 @@ class Ant(Thread):
 
         self.curr_node = self.start_node
         self.graph = self.colony.graph
-        self.path_vec = []
+        self.path_vec = [] # Keeps track of current path
         self.path_vec.append(self.start_node)
         self.path_cost = 0
 
         # same meaning as in standard equations
-        self.Beta = 1
+        self.Beta = 1 # Beta is the parameter that controls the influence of eta (the attractiveness)
         #self.Q0 = 1  # Q0 = 1 works just fine for 10 city case (no explore)
-        self.Q0 = 0.5
-        self.Rho = 0.99
+        self.Q0 = 0.5 # A constant used to determine how much pheremone to deposit
+        self.Rho = 0.99 # Pheremone evaporation coefficient
 
         # store the nodes remaining to be explored here
         self.nodes_to_visit = {}
 
-        for i in range(0, self.graph.num_nodes):
+        for i in range(0, self.graph.num_nodes): 
             if i != self.start_node:
                 self.nodes_to_visit[i] = i
 
         # create n X n matrix 0'd out to start
-        self.path_mat = []
+        self.path_mat = [] 
 
         for i in range(0, self.graph.num_nodes):
             self.path_mat.append([0]*self.graph.num_nodes)
@@ -41,8 +41,8 @@ class Ant(Thread):
         while not self.end():
             # we need exclusive access to the graph
             graph.lock.acquire()
-            new_node = self.state_transition_rule(self.curr_node)
-            self.path_cost += graph.delta(self.curr_node, new_node)
+            new_node = self.state_transition_rule(self.curr_node) # Choose next node according to probability from formula
+            self.path_cost += graph.delta(self.curr_node, new_node) 
 
             self.path_vec.append(new_node)
             self.path_mat[self.curr_node][new_node] = 1  #adjacency matrix representing path
@@ -73,7 +73,7 @@ class Ant(Thread):
         q = random.random()
         max_node = -1
 
-        if q < self.Q0:
+        if q < self.Q0: # Exploitation means deterministically visit the most "promising" adjacent node 
             print "Exploitation"
             max_val = -1
             val = None
@@ -89,7 +89,7 @@ class Ant(Thread):
         else:
             print "Exploration"
             sum = 0
-            node = -1
+            node = -1 # indicates node has not been set yet
 
             for node in self.nodes_to_visit.values():
                 if graph.tau(curr_node, node) == 0:
@@ -102,6 +102,7 @@ class Ant(Thread):
 
             print "avg = %s" % (avg,)
 
+            # Choose nodes semi-deterministically; true randomness comes from initial random placement of ants
             for node in self.nodes_to_visit.values():
                 p = graph.tau(curr_node, node) * math.pow(graph.etha(curr_node, node), self.Beta) 
                 if p > avg:

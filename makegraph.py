@@ -27,10 +27,12 @@ def best_graph(input_num_str, num_vertices_str, non_path_val):
         NS = set([8 * i + 2 for i in range(1, 6)] + [8 * i + 5 for i in range(6)]) #set of N and S vertices
 
         #vertices on the diamond paths (vertices on path numbered 1 - 48 in order)
-        for i in range(48):
-            for j in range(48):
+        for i in range(num_vertices):
+            for j in range(num_vertices):
                 if i == j: 
                     graph[i][j] = 0
+                elif i >= 48 or j >= 48:
+                    graph[i][j] = 2 * M
                 elif abs(i - j) == 47: #edge between first and last vertex on path
                     graph[i][j] = 2 * M 
                 elif abs(i - j) == 1: #edges next to each other on the path
@@ -61,7 +63,7 @@ def best_graph(input_num_str, num_vertices_str, non_path_val):
         #assigning colors to vertices
         colors = ""
         red = True 
-        for i in range(48):
+        for i in range(num_vertices):
             if red:
                 colors += "R"
                 red = False

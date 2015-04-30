@@ -1,4 +1,5 @@
 import sys
+import traceback
 
 def best_graph(input_num_str, num_vertices_str):
     """Inputs:
@@ -25,20 +26,20 @@ def best_graph(input_num_str, num_vertices_str):
         #for i in range (6):
         #copying graph into file
         edges = ""
-        """
         for x in range(num_vertices):
             for y in range(num_vertices):
                 if y == num_vertices - 1: #last column needs new line instead of trailing space
                     if x == num_vertices - 1: #last row needs no new line or trailing space
-                        edges += graph[x][y].str()
+                        edges += str(graph[x][y])
                     else:
-                        edges += graph[x][y].str() + "\n"
+                        edges += str(graph[x][y]) + "\n"
                 else:
-                    edges += graph[x][y].str() + " " 
-        """
+                    edges += str(graph[x][y]) + " " 
+        file.write(edges)
         file.close()
-    except:
+    except Exception as e:
         print("FAILED")
+        print(e)
         sys.exit(0)
 
 

@@ -8,10 +8,12 @@ for t in xrange(1, T+1):
         d[i] = [int(x) for x in fin.readline().split()]
     c = fin.readline()
 
+
+
     # find an answer, and put into assign
     assign = [0] * N
     for i in xrange(N):
         assign[i] = i+1
 
-    fout.write("%s\n" % " ".join(map(str, assign)))
+   fout.write("%s\n" % " ".join(map(str, assign)))
 fout.close()

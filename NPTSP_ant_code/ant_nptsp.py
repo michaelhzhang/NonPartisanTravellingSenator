@@ -27,8 +27,8 @@ if __name__ == "__main__":
         num_repetitions = 1 # TODO: Increase number of repetitions?
     else:
         num_ants = 28 
-        num_iterations = 20 
-        num_repetitions = 1
+        num_iterations = 30 # TODO: INCREASE THIS?
+        num_repetitions = 3 # TODO: INCREASE THIS?
 
     try:
         graph = AntGraph(num_nodes, distances,colors) # construct the graph
@@ -49,6 +49,20 @@ if __name__ == "__main__":
         print "\nBest path = %s" % (best_path_vec,)
         print "\nBest path cost = %s\n" % (best_path_cost,)
         print "\nBest path colors = %s\n" % (best_path_colors,)
+
+        # Output code
+        out_string = str(f).rstrip("in") + "out"
+        fout = open(out_string, "w")
+
+        # Output code:
+        # find an answer, and put into assign
+        assign = [0] * num_nodes
+        for i in xrange(num_nodes):
+            assign[i] = best_path_vec[i] + 1 # 1 index the nodes
+
+        fout.write("%s\n" % " ".join(map(str, assign)))
+        fout.close()
+
     except Exception, e:
         print "exception: " + str(e)
         traceback.print_exc()

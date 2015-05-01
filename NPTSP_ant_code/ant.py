@@ -170,9 +170,6 @@ class Ant(Thread): # Each ant is its own thread of execution
                 #print "Exploration"
                 pheremone_sum = 0
 
-                # sentinel pattern
-                node = -1
-
                 for node in self.nodes_to_visit.values():
                     if self.valid_color(node) and self.completable_path(node):
                         if graph.tau(curr_node, node) == 0:

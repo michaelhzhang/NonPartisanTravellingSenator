@@ -39,10 +39,10 @@ def best_graph(input_num_str, num_vertices_str, non_path_val):
                     graph[i][j] = 1
                 elif (((i % 8 == 0 and j % 8 == 4) or (i % 8 == 4 and j % 8 == 0)) and abs(i - j) == 4): 
                     #edges in the diamond that are not on the path
-                    graph[i][j] = 0
+                    graph[i][j] = 2 * M 
                 elif (((i % 8 == 3 and j % 8 == 7) or (i % 8 == 7 and j % 8 == 3)) and abs(i - j) == 4):
                     #edges in the diamond that are not on the path
-                    graph[i][j] = 0
+                    graph[i][j] = 2 * M 
                 elif i in NS and j in NS and abs(i - j) > 3: #if connecting any non-consecutive N and S vertices
                     graph[i][j] = 0
                 elif (i == 2 and j in NS) or (j == 2 and i in NS): #first N vertex to any other edge in NS

@@ -84,7 +84,6 @@ def RandomStartLocalSearch(G):
 	num = 100000
 	import random
 	for i in range(0,100):
-		print i
 		while not isLegit(G,K):
 			random.shuffle(K)
 		Z = localSearch(G,K)

@@ -4,7 +4,7 @@ from ant_graph import AntGraph
 import sys
 import traceback
 
-# NOTE: CITIES ARE ASSUMED TO BE 0 INDEXED INTERNALLY. ONLY ON FILE OUTPUT ARE CITIES INDEXED EXTERNALLY
+# NOTE: CITIES ARE ASSUMED TO BE 0 INDEXED INTERNALLY. ONLY ON FILE OUTPUT ARE CITIES ONE INDEXED
 
 if __name__ == "__main__":   
     # Process input

@@ -10,12 +10,15 @@ def nptsp_dp(num_nodes, adj_mat, colors):
     """
     min_cost = 50000
     # the shortest path may start at any node
-    for start in range(num_nodes):
-        path = given_starting_node(num_nodes, adj_mat, colors, start)
-        if path_cost(path) < min_cost:
-            min_cost = path_cost(path)
-            min_path = path
-    return min_path
+    # for start in range(num_nodes):
+    #     path = given_starting_node(num_nodes, adj_mat, colors, start)
+    #     if path_cost(path) < min_cost:
+    #         min_cost = path_cost(path)
+    #         min_path = path
+    # return min_path
+    return min(map(lambda start: given_starting_node(num_nodes, adj_mat, colors, start), \
+                   range(num_nodes)), \
+                   key=lambda path: path_cost(path))
 
 def given_starting_node(num_nodes, adj_mat, colors, start):
     """ Computes the shortest path starting at node start
@@ -49,7 +52,8 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
                     # update C(subset, triple, node)
                     subproblems = update(subproblems, adj_mat, colors, subset, triple, node)
     
-    paths = [subproblems(nodes, c, j) for j in nodes for c in last_three_colors]
+    # get all subproblems that visit every node
+    paths = [subproblems[(nodes, c, j)] for j in nodes for c in last_three_colors]
     return min(paths, key=lambda path: path_cost(adj_mat, path)) # return the shortest path 
     
 

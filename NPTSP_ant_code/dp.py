@@ -1,14 +1,28 @@
 import itertools
 
 def nptsp_dp(num_nodes, adj_mat, colors):
-    return
+    """ Computes the shortest path satisfying
+    all the conditions of the NPTSP.
+
+    num_nodes -- number of nodes in the graph
+    adj_mat -- an N x N symmetric matrix, where N == num_nodes
+    start -- a list of length num_nodes
+    """
+    min_cost = 50000
+    # the shortest path may start at any node
+    for start in range(num_nodes):
+        path = given_starting_node(num_nodes, adj_mat, colors, start)
+        if path_cost(path) < min_cost:
+            min_cost = path_cost(path)
+            min_path = path
+    return min_path
 
 def given_starting_node(num_nodes, adj_mat, colors, start):
     """ Computes the shortest path starting at node start
     that satisfies all the conditions.
 
-    num_nodes -- number of nodes in the matrix
-    adj_mat -- an N x N symmetric matrix, where N = num_nodes
+    num_nodes -- number of nodes in the graph
+    adj_mat -- an N x N symmetric matrix, where N == num_nodes
     colors -- a list of length num_nodes
     start -- a number between 0 inclusive and num_nodes exclusive
     """
@@ -28,11 +42,23 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
             for node in subset: # iterate over all nodes in the subset
                 for triple in last_three_colors: # iterate over all possible last 3 colors
                     # update C(subset, triple, node)
-                    subproblems = update(subproblems, adj_mat, colors, start, subset, triple, node)
+                    subproblems = update(subproblems, adj_mat, colors, subset, triple, node)
+    
+    nodes_set = set(nodes)
+    paths = [subproblems(nodes_set, c, j) for j in nodes_set for c in last_three_colors]
+    return min(paths, key=lambda path: path_cost(adj_mat, path)) # return the shortest path 
+    
 
+def update(subproblems, adj_mat, colors, visited, triple, end):
+    """ Updates the subproblems dictionary entry with the key (visited, triple, end).
 
-
-def update(subproblems, adj_mat, colors, start, visited, triple, end):
+    subproblems -- a dictionary of subproblem solutions
+    adj_mat -- the adjacency matrix
+    colors -- the list of node color assignments
+    visited -- the set of visited nodes
+    triple -- the last three node colors encountered
+    end -- the ending node
+    """
     last_three_colors = ["RRR", "RRB", "RBR", "RBB", "BRR", "BRB", "BBR", "BBB"]
     min_cost = 50000
     if triple[0] == colors[end]: # if the color of end matches the corresponding color in triple
@@ -54,6 +80,11 @@ def update(subproblems, adj_mat, colors, start, visited, triple, end):
     return subproblems
   
 def path_cost(adj_mat, path):
+    """ Computes the path cost of a given path.
+
+    adj_mat -- the adjacency matrix
+    path -- a list of nodes
+    """
     if path is None:
         return 50000
     cost = 0

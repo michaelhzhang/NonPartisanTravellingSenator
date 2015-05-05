@@ -44,12 +44,12 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
     
     # base cases, when S = {}
     for triple in last_three_colors:
-        subproblems[set([]), triple, start)] = [start]
+        subproblems[((), triple, start)] = [start]
         for node in nodes:
-            subproblems[set([]), triple, node)] = None # not a valid path
+            subproblems[((), triple, node)] = None # not a valid path
 
     for subset_size in range(1, num_nodes): # iterate over increasing subset size
-        subsets = set(itertools.combinations(set(nodes), subset_size))
+        subsets = itertools.combinations(set(nodes), subset_size)
         for subset in subsets: # iterate over all subsets of size subset_size
             for node in subset: # iterate over all nodes in the subset
                 for triple in last_three_colors: # iterate over all possible last 3 colors
@@ -67,7 +67,7 @@ def update(subproblems, adj_mat, colors, visited, triple, end):
     subproblems -- a dictionary of subproblem solutions
     adj_mat -- the adjacency matrix
     colors -- the list of node color assignments
-    visited -- the set of visited nodes
+    visited -- the tuple of visited nodes, should be sorted
     triple -- the last three node colors encountered
     end -- the ending node
     """
@@ -80,8 +80,7 @@ def update(subproblems, adj_mat, colors, visited, triple, end):
 
     min_cost = 50000
     if triple[0] == colors[end]: # if the color of end matches the corresponding color in triple
-        prev_visited = set(visited) # copy the set visited and take out the node end
-        prev_visited.remove(end)
+        prev_visited = tuple([i for i in visited if i != end]) # copy the visited tuple and take out the node end
 
         # finding the minimum path according to the recurrence
         for intermediate in prev_visited: # loop through all possible intermediate nodes

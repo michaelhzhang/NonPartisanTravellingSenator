@@ -33,7 +33,8 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
     start -- a number between 0 inclusive and num_nodes exclusive
     """
     last_three_colors = ["RRR", "RRB", "RBR", "RBB", "BRR", "BRB", "BBR", "BBB"]
-    nodes = set([node for node in range(num_nodes)].remove(start))
+    nodes = set([node for node in range(num_nodes)])
+    nodes.remove(start)
 
     # C(S, c, j), where S is the set of visited nodes so far
     # c is the last three colors encountered
@@ -43,9 +44,9 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
     
     # base cases, when S = {}
     for triple in last_three_colors:
-        subproblems[(set([]), triple, start)] = [start]
+        subproblems[set([]), triple, start)] = [start]
         for node in nodes:
-            subproblems[(set([]), triple, node)] = None # not a valid path
+            subproblems[set([]), triple, node)] = None # not a valid path
 
     for subset_size in range(1, num_nodes): # iterate over increasing subset size
         subsets = set(itertools.combinations(set(nodes), subset_size))

@@ -28,13 +28,18 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
     """
     last_three_colors = ["RRR", "RRB", "RBR", "RBB", "BRR", "BRB", "BBR", "BBB"]
     nodes = [node for node in range(num_nodes)].remove(start)
-    subproblems = {}
 
     # C(S, c, j), where S is the set of visited nodes so far
     # c is the last three colors encountered
-    # c should be of the form [a, b, c], where a is the lastest color
+    # c should be of the form [a, b, c], where a is the latest color
     # j is the end city
-    subproblems[(set([]), (), start)] = [start]
+    subproblems = {}
+    
+    # base cases, when S = {}
+    for triple in last_three_colors:
+        subproblems[(set([]), triple, start)] = [start]
+        for node in nodes:
+            subproblems[(set([]), triple, node)] = None
 
     for subset_size in range(1, num_nodes): # iterate over increasing subset size
         subsets = set(itertools.combinations(set(nodes), subset_size))

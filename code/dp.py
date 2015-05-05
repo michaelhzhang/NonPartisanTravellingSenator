@@ -16,6 +16,9 @@ def nptsp_dp(num_nodes, adj_mat, colors):
     #         min_cost = path_cost(path)
     #         min_path = path
     # return min_path
+
+    # map each node to the best possible path starting at the node
+    # return the path with least cost
     return min(map(lambda start: given_starting_node(num_nodes, adj_mat, colors, start), \
                    range(num_nodes)), \
                    key=lambda path: path_cost(path))

@@ -42,6 +42,7 @@ if __name__ == "__main__":
         prev_answers =[[] for i in xrange(0,NUM_INSTANCES)]
         for i in xrange(0,NUM_INSTANCES):
             prev_answers[i] = [int(x) for x in prev_answer_file.readline().split()]
+        prev_answer_file.close()
 
     # Output file
     fout = open("answer.out","w")

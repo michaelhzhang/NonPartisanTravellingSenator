@@ -8,7 +8,7 @@ def nptsp_dp(num_nodes, adj_mat, colors):
     adj_mat -- an N x N symmetric matrix, where N == num_nodes
     start -- a list of length num_nodes
     """
-    min_cost = 50000
+    # min_cost = 50000
     # the shortest path may start at any node
     # for start in range(num_nodes):
     #     path = given_starting_node(num_nodes, adj_mat, colors, start)
@@ -50,7 +50,7 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
             for node in subset: # iterate over all nodes in the subset
                 for triple in last_three_colors: # iterate over all possible last 3 colors
                     # update C(subset, triple, node)
-                    subproblems = update(subproblems, adj_mat, colors, subset, triple, node)
+                    update(subproblems, adj_mat, colors, subset, triple, node)
     
     # get all subproblems that visit every node
     paths = [subproblems[(nodes, c, j)] for j in nodes for c in last_three_colors]
@@ -91,10 +91,7 @@ def update(subproblems, adj_mat, colors, visited, triple, end):
         subproblems[(visited, triple, end)] = subproblems[(prev_visited, min_triple, min_node)] + [min_node]
 
     else: # subproblem is not valid
-        visited.add(end)
         subproblems[(visited, triple, end)] = None
-
-    return subproblems
   
 def path_cost(adj_mat, path):
     """ Computes the path cost of a given path.
@@ -105,7 +102,7 @@ def path_cost(adj_mat, path):
     if path is None:
         return 50000
 
-    # the zip puts each pair of neighbors together in a tuple
+    # the zip puts each pair of neighbors in the path together in a tuple
     # then map each tuple (i.e. edge) to its length
     # then sum all the edge lengths up
     return sum(map(lambda (u, v): adj_mat[u][v], zip(path[:-1], path[1:])))

@@ -42,12 +42,12 @@ if __name__ == "__main__":
         prev_answers =[[] for i in xrange(0,NUM_INSTANCES)]
         for i in xrange(0,NUM_INSTANCES):
             prev_answers[i] = [int(x) for x in prev_answer_file.readline().split()]
-        prev_answer_file.close()
 
     # Output file
     fout = open("answer.out","w")
     for i in xrange(0,NUM_INSTANCES):
-        processed = process_input(str(i+1) + ".in") # Note for testing: 101.in is really small
+        num_nodes,distances, colors = process_input(str(i+1) + ".in")
+        # num_nodes, distances, colors = process_input("101.in") # For testing: 101.in is small
         runner = AntNPTSPRunner(num_nodes, distances, colors)
 
         # print runner.get_best_path()

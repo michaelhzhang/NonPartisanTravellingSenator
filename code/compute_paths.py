@@ -33,18 +33,18 @@ def score_path(num_nodes,distances,path, one_index = True):
 
 if __name__ == "__main__":
     # TODO: Exception handling?
-    NUM_INSTANCES = 1 # Default to 495
+    NUM_INSTANCES = 495 # Default to 495
 
     # Check if answer.out already exits
     prev_answers = None
-    if os.path.isfile("test.out"):
-        prev_answer_file = open("test.out","r")
+    if os.path.isfile("answer.out"):
+        prev_answer_file = open("answer.out","r")
         prev_answers =[[] for i in xrange(0,NUM_INSTANCES)]
         for i in xrange(0,NUM_INSTANCES):
             prev_answers[i] = [int(x) for x in prev_answer_file.readline().split()]
 
     # Output file
-    fout = open("test.out","w")
+    fout = open("answer.out","w")
     for i in xrange(0,NUM_INSTANCES):
         processed = process_input(str(i+1) + ".in") # Note for testing: 101.in is really small
         runner = AntNPTSPRunner(num_nodes, distances, colors)

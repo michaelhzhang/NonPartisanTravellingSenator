@@ -79,6 +79,8 @@ def update(subproblems, adj_mat, colors, visited, triple, end):
     valid_colors = [prev_triple for prev_triple in last_three_colors if prev_triple[:2] == triple[1:]]
 
     min_cost = 50000
+    min_triple = triple
+    min_node = end
     if triple[0] == colors[end]: # if the color of end matches the corresponding color in triple
         prev_visited = tuple([i for i in visited if i != end]) # copy the visited tuple and take out the node end
 
@@ -86,12 +88,16 @@ def update(subproblems, adj_mat, colors, visited, triple, end):
         for intermediate in prev_visited: # loop through all possible intermediate nodes
             for prev_triple in valid_colors: # loop through all valid color triples
                 path = subproblems[(prev_visited, prev_triple, intermediate)]
+                # print path_cost(adj_mat, path) + adj_mat[intermediate][end]
                 if path_cost(adj_mat, path) + adj_mat[intermediate][end] < min_cost:
                     min_cost = path_cost(adj_mat, path) + adj_mat[intermediate][end]
                     min_triple = prev_triple
                     min_node = intermediate
-
-        subproblems[(visited, triple, end)] = subproblems[(prev_visited, min_triple, min_node)] + [min_node]
+        
+        if subproblems[(prev_visited, min_triple, min_node)] is not None:
+            subproblems[(visited, triple, end)] = subproblems[(prev_visited, min_triple, min_node)] + [min_node]
+        else:
+            subproblems[(visited, triple, end)] = None
 
     else: # subproblem is not valid
         subproblems[(visited, triple, end)] = None

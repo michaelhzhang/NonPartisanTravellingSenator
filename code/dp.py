@@ -58,7 +58,7 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
                 for node in subset:
                     if node != start:
                         # update C(subset, triple, node)
-                        print subset, triple, node
+                        # print subset, triple, node
                         update(subproblems, adj_mat, colors, subset, triple, node)
                     else:
                         subproblems[(subset, triple, node)] = None

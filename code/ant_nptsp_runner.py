@@ -1,3 +1,5 @@
+# Code based off of the publically available code at https://github.com/trevlovett/Python-Ant-Colony-TSP-Solver
+
 from ant_colony import AntColony
 from ant_graph import AntGraph
 
@@ -20,16 +22,10 @@ class AntNPTSPRunner:
 
     def __calculate(self):
         """Private method. Computes an optimal path using ant colonization."""
-        # TODO: Figure out optimal number of ants (research paper suggests this might be 10)
-        if self.num_nodes <= 10:
-            #num_ants = 1 # for testing
-            self.num_ants = 20
-            self.num_iterations = 12
-            self.num_repetitions = 1 # TODO: Increase number of repetitions?
-        else:
-            self.num_ants = 28 
-            self.num_iterations = 30 # TODO: INCREASE THIS?
-            self.num_repetitions = 3 # TODO: INCREASE THIS?
+        # All values taken from paper
+        self.num_ants = 10
+        self.num_iterations = 200 #100 
+        self.num_repetitions = 2 
 
         try:
             graph = AntGraph(self.num_nodes, self.distances,self.colors) # construct the graph

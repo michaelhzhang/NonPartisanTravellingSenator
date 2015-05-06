@@ -1,3 +1,5 @@
+# Code based off of the publically available code at https://github.com/trevlovett/Python-Ant-Colony-TSP-Solver
+
 import math
 import random
 import sys
@@ -28,10 +30,10 @@ class Ant(Thread): # Each ant is its own thread of execution
         self.color_bookkeeping(self.curr_node)
 
         # same meaning as in standard equations
-        self.Beta = 1 # Beta is the parameter that controls the influence of eta (the attractiveness)
-        #self.Q0 = 1  # Q0 = 1 works just fine for 10 city case (no explore)
-        self.Q0 = 0.5 # A constant used to determine how much pheremone to deposit
-        self.Rho = 0.99 # Pheremone evaporation coefficient
+        self.Beta = 2 # Beta is the parameter that controls the influence of eta (the attractiveness)
+        #self.Q0 = 1 # Q0 = 1 works just fine for 10 city case (no explore)
+        self.Q0 = 0.9 # A constant used to determine how much pheremone to deposit
+        self.Rho = 0.1 # Pheremone evaporation coefficient
 
         # store the nodes remaining to be explored here
         self.nodes_to_visit = {}

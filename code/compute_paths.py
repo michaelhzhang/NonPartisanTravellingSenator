@@ -1,3 +1,5 @@
+# Code based off of the publically available code at https://github.com/trevlovett/Python-Ant-Colony-TSP-Solver
+
 from ant_nptsp_runner import AntNPTSPRunner
 from LocalSearch import *
 import os.path
@@ -46,22 +48,22 @@ if __name__ == "__main__":
     # Output file
     fout = open("answer.out","w")
     for i in xrange(0,NUM_INSTANCES):
-        num_nodes,distances, colors = process_input(str(i+1) + ".in")
+        num_nodes,distances,colors = process_input(str(i+1) + ".in")
         # num_nodes, distances, colors = process_input("101.in") # For testing: 101.in is small
-        runner = AntNPTSPRunner(num_nodes, distances, colors)
+        runner = AntNPTSPRunner(num_nodes,distances,colors)
 
-        # print runner.get_best_path()
-        # print runner.get_best_path_cost()
-        # print runner.get_best_path_colors()
+        print runner.get_best_path()
+        print "Current cost: " + str(runner.get_best_path_cost())
+        print runner.get_best_path_colors()
 
         # Output code
         best_path_vec = runner.get_best_path()
 
         # Only replace previous answer if new answer is better
         if prev_answers is not None:
-            #print "Previously computed"
+            print "Previously computed"
             prev_cost = score_path(num_nodes,distances,prev_answers[i])
-            #print "prev_cost: " + str(prev_cost)
+            print "prev_cost: " + str(prev_cost)
             if runner.get_best_path_cost() > prev_cost:
                 assign = prev_answers[i]
                 fout.write("%s\n" % " ".join(map(str, assign)))
@@ -69,7 +71,7 @@ if __name__ == "__main__":
                 assign = [0] * num_nodes
                 for j in xrange(num_nodes):
                     assign[j] = best_path_vec[j] + 1 # 1 indexes the nodes
-            fout.write("%s\n" % " ".join(map(str, assign)))
+                fout.write("%s\n" % " ".join(map(str, assign)))
         else:       
             assign = [0] * num_nodes
             for j in xrange(num_nodes):

@@ -1,3 +1,5 @@
+# Code based off of the publically available code at https://github.com/trevlovett/Python-Ant-Colony-TSP-Solver
+
 from ant import Ant
 from threading import Lock, Condition
 

@@ -1,3 +1,5 @@
+# Code based off of the publically available code at https://github.com/trevlovett/Python-Ant-Colony-TSP-Solver
+
 from threading import Lock
 
 # Everything is stored as a matrix. 
@@ -34,7 +36,7 @@ class AntGraph:
     # TODO: What's a good value of eta to put on this when the distance is 0?
     def etha(self, r, s):
         if self.delta(r,s) == 0:
-            return 100
+            return 2.5 # somewhat arbitrarily chosen
         return 1.0 / self.delta(r, s)
 
     # Returns color of city r
@@ -52,13 +54,13 @@ class AntGraph:
         self.tau_mat[r][s] = val
         lock.release()
 
-    def reset_tau(self): # initializes all the taus to 2 / (N * avg_distance)
+    def reset_tau(self): # initializes all the taus to 1 / (num_nodes^2 * avg_distance)
         lock = Lock()
         lock.acquire()
         avg = self.average_delta()
 
         # initial tau 
-        self.tau0 = 1.0 / (self.num_nodes * 0.5 * avg)
+        self.tau0 = 1.0 / (self.num_nodes * self.num_nodes * avg)
 
         #print "Average = %s" % (avg,)
         #print "Tau0 = %s" % (self.tau0)

@@ -8,7 +8,7 @@ def main(argv):
   fanswer = open("answer.out", "r")
   fout = open("score.txt", "w")
   for i in xrange(ninstances):
-    finstance = open(`i+1`+".in", "r")
+    finstance = open("instances/" + str(i+1) +".in", "r")
     N = int(finstance.readline())
     d = [[] for i in range(N)]
     for i in xrange(N):

@@ -18,6 +18,7 @@ class AntNPTSPRunner:
         self.best_path_vec = None
         self.best_path_cost = None
         self.best_path_colors = None
+        self.graph = None
         self.__calculate()
 
     def __calculate(self):
@@ -28,16 +29,16 @@ class AntNPTSPRunner:
         self.num_repetitions = 2 
 
         try:
-            graph = AntGraph(self.num_nodes, self.distances,self.colors) # construct the graph
+            self.graph = AntGraph(self.num_nodes, self.distances,self.colors) # construct the graph
             self.best_path_cost = sys.maxint # initialize cost to infinity
             for i in range(0, self.num_repetitions): # run multiple repetitions. Run multiple repetitions because each iteration is random.
-                graph.reset_tau()  # reset trail level
-                ant_colony = AntColony(graph, self.num_ants, self.num_iterations) # construct ant colony
+                self.graph.reset_tau()  # reset trail level
+                ant_colony = AntColony(self.graph, self.num_ants, self.num_iterations) # construct ant colony
                 ant_colony.start()
                 if ant_colony.best_path_cost < self.best_path_cost: # if we found a better path, take that path
                     self.best_path_vec = ant_colony.best_path_vec
                     self.best_path_cost = ant_colony.best_path_cost
-            self.best_path_colors = [graph.get_color(node) for node in self.best_path_vec]
+            self.best_path_colors = [self.graph.get_color(node) for node in self.best_path_vec]
 
         except Exception, e:
             print "exception: " + str(e)
@@ -62,3 +63,8 @@ class AntNPTSPRunner:
             raise Exception("No best path yet calculated")
         return self.best_path_colors
     
+    def get_graph(self):
+        """Returns constructed ant graph"""
+        if self.graph == None:
+            raise Exception("No best path yet calculated")
+        return self.graph

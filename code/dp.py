@@ -33,7 +33,7 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
     start -- a number between 0 inclusive and num_nodes exclusive
     """
     last_three_colors = ["RRR", "RRB", "RBR", "RBB", "BRR", "BRB", "BBR", "BBB"]
-    nodes = tuple([node for node in range(num_nodes) if node != start])
+    nodes = tuple(range(num_nodes))
 
     # C(S, c, j), where S is the set of visited nodes so far
     # c is the last three colors encountered
@@ -43,18 +43,23 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
     
     # base cases, when S = {}
     for triple in last_three_colors:
-        subproblems[((), triple, start)] = [start]
         for node in nodes:
-            subproblems[((), triple, node)] = None # not a valid path
+            if node == start:
+                subproblems[((start,), triple, start)] = [start]
+            else:
+                subproblems[((start,), triple, node)] = None # not a valid path
 
-    for subset_size in range(1, num_nodes): # iterate over increasing subset size
+    for subset_size in range(2, num_nodes + 1): # iterate over increasing subset size
         subsets = itertools.combinations(set(nodes), subset_size)
+        subsets = [subset for subset in subsets if start in subset]
         for subset in subsets: # iterate over all subsets of size subset_size
-            for node in subset: # iterate over all nodes in the subset
-                for triple in last_three_colors: # iterate over all possible last 3 colors
-                    # update C(subset, triple, node)
-                    # print "updating C" + str(subset) + " " + triple + " " + str(node)
-                    update(subproblems, adj_mat, colors, subset, triple, node)
+            for triple in last_three_colors: # iterate over all possible last 3 colors
+                for node in subset:
+                    if node != start:
+                        # update C(subset, triple, node)
+                        update(subproblems, adj_mat, colors, subset, triple, node)
+                    else:
+                        subproblems[(subset, triple, node)] = None
     
     # get all subproblems that visit every node
     paths = [subproblems[(nodes, c, j)] for j in nodes for c in last_three_colors]
@@ -95,9 +100,6 @@ def update(subproblems, adj_mat, colors, visited, triple, end):
                     min_triple = prev_triple
                     min_node = intermediate
         
-        # print (prev_visited, min_triple, min_node)
-        # if min_node == 1:
-            # print (prev_visited, min_triple, min_node)
         if subproblems[(prev_visited, min_triple, min_node)] is not None:
             subproblems[(visited, triple, end)] = subproblems[(prev_visited, min_triple, min_node)] + [min_node]
         else:

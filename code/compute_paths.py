@@ -2,6 +2,7 @@
 
 from ant_nptsp_runner import AntNPTSPRunner
 from LocalSearch import *
+from dp import nptsp_dp
 import os.path
 
 import sys
@@ -50,21 +51,30 @@ if __name__ == "__main__":
     for i in xrange(0,NUM_INSTANCES):
         num_nodes,distances,colors = process_input(str(i+1) + ".in")
         # num_nodes, distances, colors = process_input("101.in") # For testing: 101.in is small
-        runner = AntNPTSPRunner(num_nodes,distances,colors)
 
-        print runner.get_best_path()
-        print "Current cost: " + str(runner.get_best_path_cost())
-        print runner.get_best_path_colors()
+        if num_nodes <= 20: # TODO: What is the upper bound on what DPs can handle?
+            best_path_vec, best_path_cost = nptsp_dp(num_nodes,distances,colors)
 
-        # Output code
-        best_path_vec = runner.get_best_path()
+        else:
+            runner = AntNPTSPRunner(num_nodes,distances,colors)
+
+            print runner.get_best_path()
+            print "Current cost: " + str(runner.get_best_path_cost())
+            print runner.get_best_path_colors()
+
+            # Output code
+            best_path_vec = runner.get_best_path()
+            best_path_cost = runner.get_best_path_cost()
+
+        
+
 
         # Only replace previous answer if new answer is better
         if prev_answers is not None:
-            print "Previously computed"
+            #print "Previously computed"
             prev_cost = score_path(num_nodes,distances,prev_answers[i])
             print "prev_cost: " + str(prev_cost)
-            if runner.get_best_path_cost() > prev_cost:
+            if best_path_cost > prev_cost:
                 assign = prev_answers[i]
                 fout.write("%s\n" % " ".join(map(str, assign)))
             else:       

@@ -24,7 +24,7 @@ class AntNPTSPRunner:
         """Private method. Computes an optimal path using ant colonization."""
         # All values taken from paper
         self.num_ants = 10
-        self.num_iterations = 200 #100 
+        self.num_iterations = 150  
         self.num_repetitions = 2 
 
         try:

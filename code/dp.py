@@ -21,7 +21,7 @@ def nptsp_dp(num_nodes, adj_mat, colors):
     # return the path with least cost
     return min(map(lambda start: given_starting_node(num_nodes, adj_mat, colors, start), \
                    range(num_nodes)), \
-                   key=lambda path: path_cost(path))
+                   key=lambda path: path_cost(adj_mat, path))
 
 def given_starting_node(num_nodes, adj_mat, colors, start):
     """ Computes the shortest path starting at node start
@@ -33,8 +33,7 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
     start -- a number between 0 inclusive and num_nodes exclusive
     """
     last_three_colors = ["RRR", "RRB", "RBR", "RBB", "BRR", "BRB", "BBR", "BBB"]
-    nodes = set([node for node in range(num_nodes)])
-    nodes.remove(start)
+    nodes = tuple([node for node in range(num_nodes) if node != start])
 
     # C(S, c, j), where S is the set of visited nodes so far
     # c is the last three colors encountered
@@ -54,6 +53,7 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
             for node in subset: # iterate over all nodes in the subset
                 for triple in last_three_colors: # iterate over all possible last 3 colors
                     # update C(subset, triple, node)
+                    # print "updating C" + str(subset) + " " + triple + " " + str(node)
                     update(subproblems, adj_mat, colors, subset, triple, node)
     
     # get all subproblems that visit every node
@@ -83,17 +83,21 @@ def update(subproblems, adj_mat, colors, visited, triple, end):
     min_node = end
     if triple[0] == colors[end]: # if the color of end matches the corresponding color in triple
         prev_visited = tuple([i for i in visited if i != end]) # copy the visited tuple and take out the node end
+        if len(prev_visited) > 0:
+            min_node = prev_visited[0]
 
         # finding the minimum path according to the recurrence
         for intermediate in prev_visited: # loop through all possible intermediate nodes
             for prev_triple in valid_colors: # loop through all valid color triples
                 path = subproblems[(prev_visited, prev_triple, intermediate)]
-                # print path_cost(adj_mat, path) + adj_mat[intermediate][end]
                 if path_cost(adj_mat, path) + adj_mat[intermediate][end] < min_cost:
                     min_cost = path_cost(adj_mat, path) + adj_mat[intermediate][end]
                     min_triple = prev_triple
                     min_node = intermediate
         
+        # print (prev_visited, min_triple, min_node)
+        # if min_node == 1:
+            # print (prev_visited, min_triple, min_node)
         if subproblems[(prev_visited, min_triple, min_node)] is not None:
             subproblems[(visited, triple, end)] = subproblems[(prev_visited, min_triple, min_node)] + [min_node]
         else:

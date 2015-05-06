@@ -102,7 +102,7 @@ def update(subproblems, adj_mat, colors, visited, triple, end):
                     min_node = intermediate
         
         if subproblems[(prev_visited, min_triple, min_node)] is not None:
-            subproblems[(visited, triple, end)] = subproblems[(prev_visited, min_triple, min_node)] + [min_node]
+            subproblems[(visited, triple, end)] = subproblems[(prev_visited, min_triple, min_node)] + [end]
         else:
             subproblems[(visited, triple, end)] = None
 

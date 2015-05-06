@@ -57,6 +57,7 @@ def given_starting_node(num_nodes, adj_mat, colors, start):
                 for node in subset:
                     if node != start:
                         # update C(subset, triple, node)
+                        print subset, triple, node
                         update(subproblems, adj_mat, colors, subset, triple, node)
                     else:
                         subproblems[(subset, triple, node)] = None
@@ -87,7 +88,7 @@ def update(subproblems, adj_mat, colors, visited, triple, end):
     min_triple = triple
     min_node = end
     if triple[0] == colors[end]: # if the color of end matches the corresponding color in triple
-        prev_visited = tuple([i for i in visited if i != end]) # copy the visited tuple and take out the node end
+        prev_visited = tuple([i for i in visited if i != end]) # copy the visited tuple and take out the end node
         if len(prev_visited) > 0:
             min_node = prev_visited[0]
 

@@ -17,6 +17,7 @@ class AntColony:
         # condition var
         self.cv = Condition()
 
+
         self.reset()
 
     def reset(self):
@@ -26,6 +27,7 @@ class AntColony:
         self.last_best_path_iteration = 0
 
     def start(self):
+        #print "startred colony"
         self.ants = self.create_ants() # creates ants
         self.iter_counter = 0
 
@@ -47,6 +49,10 @@ class AntColony:
     def iteration(self):
         self.avg_path_cost = 0
         self.ant_counter = 0
+
+        # To prevent race conditions on ant_counter
+        self.update_lock = Lock()
+
         self.iter_counter += 1
         #print "iter_counter = %s" % (self.iter_counter,)
         for ant in self.ants:
@@ -64,23 +70,24 @@ class AntColony:
 
     # called by individual ants
     def update(self, ant):
-        lock = Lock()
-        lock.acquire()
+        self.update_lock.acquire()
 
         #outfile = open("results.dat", "a")
 
-        #print "Update called by %s" % (ant.ID,)
+        #print "Update called by %s\n" % (ant.ID,)
         self.ant_counter += 1
 
         self.avg_path_cost += ant.path_cost
 
         # book-keeping
         if ant.path_cost < self.best_path_cost:
+            #print "book-keeping by %s\n" % (ant.ID,)
             self.best_path_cost = ant.path_cost
             self.best_path_mat = ant.path_mat
             self.best_path_vec = ant.path_vec
             self.last_best_path_iteration = self.iter_counter
 
+        #print "Ant counter: %s, total ants: %s " % (self.ant_counter, len(self.ants))
         if self.ant_counter == len(self.ants): # If all the ants have finished
             self.avg_path_cost /= len(self.ants)
             #print "Best: %s, %s, %s, %s" % (self.best_path_vec, self.best_path_cost, self.iter_counter, self.avg_path_cost,)
@@ -89,13 +96,14 @@ class AntColony:
             self.cv.notify() # Notify the condition variable to do a global update of pheremone levels
             self.cv.release()
         #outfile.close()
-        lock.release()
+        self.update_lock.release()
 
     def done(self): # Returns boolean to see if algorithm has finished running once
         return self.iter_counter == self.num_iterations
 
     # assign each ant a random start-node
     def create_ants(self):
+        #print "ants created"
         self.reset()
         ants = []
         for i in range(0, self.num_ants):
@@ -106,6 +114,7 @@ class AntColony:
 
     # changes the tau matrix based on evaporation/deposition 
     def global_updating_rule(self): # Update the tau's
+        #print "global updating"
         evaporation = 0
         deposition = 0
 

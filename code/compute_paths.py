@@ -36,7 +36,7 @@ def score_path(num_nodes,distances,path, one_index = True):
 
 if __name__ == "__main__":
     # TODO: Exception handling?
-    NUM_INSTANCES = 495 # Default to 495
+    NUM_INSTANCES = 1#495 # Default to 495
 
     # Check if answer.out already exits
     prev_answers = None
@@ -47,18 +47,19 @@ if __name__ == "__main__":
             prev_answers[i] = [int(x) for x in prev_answer_file.readline().split()]
 
     # Output file
-    #fout = open("answer.out","w")
+    fout = open("answer2.out","w")
     for i in xrange(0,NUM_INSTANCES):
-        num_nodes,distances,colors = process_input(str(i+1) + ".in")
-        #num_nodes, distances, colors = process_input("101.in") # For testing: 101.in is small
+        #num_nodes,distances,colors = process_input(str(i+1) + ".in")
+        num_nodes, distances, colors = process_input("6.in") # For testing: 101.in is small
 
-        if num_nodes <= 20: # TODO: What is the upper bound on what DPs can handle?
-            print "DP"
+
+        if num_nodes <= 16:
+            print "DP Case: " + str(i)
             best_path_vec, best_path_cost = nptsp_dp(num_nodes,distances,colors)
             print best_path_cost
 
         else:
-            print "Non-DP"
+            print "Non-DP Case: " + str(i)
             runner = AntNPTSPRunner(num_nodes,distances,colors)
 
             # print runner.get_best_path()
@@ -68,18 +69,29 @@ if __name__ == "__main__":
             # Output code
             best_path_vec = runner.get_best_path()
             best_path_cost = runner.get_best_path_cost()
+            #Run LocalBeamSearch on Ant Colonization Output
+            best_path_vec, best_path_cost = localBeamSearch(AntGraph(num_nodes,distances,colors),best_path_vec)
+            
+            #Run Local Beam Search on random inputs
+            RandomResult = RandomStartLocalSearch(AntGraph(num_nodes,distances,colors))
+            randomCost = RandomResult[1]
+            randomPath = RandomResult[0]
+            if best_path_cost > randomCost:
+                best_path_vec = randomPath
+                best_path_cost = randomCost
 
         # Hardcoded cases
-        dumb_guess = [i+1 for i in range(0,num_nodes)]
+        dumb_guess = [L+1 for L in range(0,num_nodes)]
         dumb_guess_cost = score_path(num_nodes,distances,dumb_guess)
-        if dumb_guess_cost < best_path_cost:
-            best_path_vec, best_path_vec = dumb_guess, dumb_guess_cost
+        if (dumb_guess_cost < best_path_cost) and isLegit(AntGraph(num_nodes,distances,colors),dumb_guess):
+            best_path_vec, best_path_cost = dumb_guess, dumb_guess_cost
 
         # Only replace previous answer if new answer is better
         if prev_answers is not None:
             #print "Previously computed"
             prev_cost = score_path(num_nodes,distances,prev_answers[i])
             # print "prev_cost: " + str(prev_cost)
+            print best_path_cost, prev_cost
             if best_path_cost > prev_cost:
                 assign = prev_answers[i]
                 fout.write("%s\n" % " ".join(map(str, assign)))

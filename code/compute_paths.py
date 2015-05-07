@@ -36,7 +36,7 @@ def score_path(num_nodes,distances,path, one_index = True):
 
 if __name__ == "__main__":
     # TODO: Exception handling?
-    NUM_INSTANCES = 1#495 # Default to 495
+    NUM_INSTANCES = 495 # Default to 495
 
     # Check if answer.out already exits
     prev_answers = None
@@ -49,8 +49,8 @@ if __name__ == "__main__":
     # Output file
     fout = open("answer2.out","w")
     for i in xrange(0,NUM_INSTANCES):
-        #num_nodes,distances,colors = process_input(str(i+1) + ".in")
-        num_nodes, distances, colors = process_input("6.in") # For testing: 101.in is small
+        num_nodes,distances,colors = process_input(str(i+1) + ".in")
+        #num_nodes, distances, colors = process_input("6.in") # For testing: 101.in is small
 
 
         if num_nodes <= 16:

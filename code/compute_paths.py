@@ -46,20 +46,26 @@ if __name__ == "__main__":
         for i in xrange(0,NUM_INSTANCES):
             prev_answers[i] = [int(x) for x in prev_answer_file.readline().split()]
 
-    # Output file
-    fout = open("answer2.out","w")
-    for i in xrange(0,NUM_INSTANCES):
+    #make output directory
+    if not os.path.exists("../output"):
+        os.makedirs("../output")
+
+    for i in xrange(13,NUM_INSTANCES):
+
+        # Output file
+        fout = open("../output/" + str(i+1) + ".out","w")
+        
         num_nodes,distances,colors = process_input(str(i+1) + ".in")
         #num_nodes, distances, colors = process_input("6.in") # For testing: 101.in is small
 
 
         if num_nodes <= 16:
-            print "DP Case: " + str(i)
+            print "DP Case: " + str(i + 1)
             best_path_vec, best_path_cost = nptsp_dp(num_nodes,distances,colors)
             print best_path_cost
 
         else:
-            print "Non-DP Case: " + str(i)
+            print "Non-DP Case: " + str(i + 1)
             runner = AntNPTSPRunner(num_nodes,distances,colors)
 
             # print runner.get_best_path()
@@ -105,5 +111,4 @@ if __name__ == "__main__":
             for j in xrange(num_nodes):
                 assign[j] = best_path_vec[j] + 1 # 1 indexes the nodes
             fout.write("%s\n" % " ".join(map(str, assign)))
-
-    fout.close()
+        fout.close()

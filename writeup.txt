@@ -1,0 +1,36 @@
+SkysTheLimit
+
+[login we're submitting with]
+
+Michael Zhang
+Alex Khodaverdian
+Stephanie Tandun
+Sky Cao
+
+Algorithm Description:
+
+
+
+
+
+
+
+Input Files Description:
+We found a paper written by C. H. Papadimitriou and K. Steiglitz written
+in 1978 titled "Some examples of Difficult Traveling Salesman Problems".
+In the paper, the authors gave examples of graphs that had many local optima,
+so that the graphs should be difficult for local search algorithms in general.
+We took these graphs, assigned colors to each of the nodes, and added some
+edges to obtain our inputs.
+
+
+
+How our code is organized:
+
+
+
+
+
+
+Libraries used:
+

@@ -121,7 +121,10 @@ class AntColony:
         for r in range(0, self.graph.num_nodes):
             for s in range(0, self.graph.num_nodes):
                 if r != s: # Never transition from a node to itself
-                    delt_tau = self.best_path_mat[r][s] / self.best_path_cost 
+                    if self.best_path_cost == 0:
+                        delt_tau = self.best_path_mat[r][s] / 1
+                    else:
+                        delt_tau = self.best_path_mat[r][s] / self.best_path_cost 
                     evaporation = (1 - self.Alpha) * self.graph.tau(r, s) # On every step, have some evaporation
                     deposition = self.Alpha * delt_tau
 

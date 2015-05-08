@@ -1,6 +1,6 @@
 SkysTheLimit
 
-[login we're submitting with]
+cs170-iu
 
 Michael Zhang
 Alex Khodaverdian

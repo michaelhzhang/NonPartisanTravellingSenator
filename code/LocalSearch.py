@@ -5,18 +5,33 @@ def scorePath(G,Path):
 		for i in range(0,len(Path)-1):
 			total += G.delta(Path[i],Path[i+1])
 	return total
-def isLegit(G,Path):
-	color = G.get_color(Path[0])
-	k = 1
-	for i in range(1,len(Path)):
-		if color==G.get_color(Path[i]):
-			k+=1
-		else:
-			k = 1
-			color = G.get_color(Path[i])
-		if k >= 4:
-			return False
-	return True
+def isLegit(G,Path,Index=True):
+        #Index = True if use 0 Indexing; False to have first node start at 1
+        if Index:
+            color = G.get_color(Path[0])
+            k = 1
+            for i in range(1,len(Path)):
+                    if color==G.get_color(Path[i]):
+                            k+=1
+                    else:
+                            k = 1
+                            color = G.get_color(Path[i])
+                    if k >= 4:
+                            return False
+            return True
+        else:
+            color = G.get_color(Path[0] - 1)
+            k = 1
+            for i in range(1,len(Path)):
+                    if color==G.get_color(Path[i] - 1):
+                            k+=1
+                    else:
+                            k = 1
+                            color = G.get_color(Path[i] - 1)
+                    if k >= 4:
+                            return False
+            return True
+
 def localSearch(G, Path,d): #Return Path, Score
 	ScoreOriginal = scorePath(G,Path)
 	Improvements = [(Path,ScoreOriginal)] #(NewPath, Score) Basically compilation of all better paths than current

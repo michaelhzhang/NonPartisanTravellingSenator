@@ -47,12 +47,12 @@ if __name__ == "__main__":
             prev_answers[i] = [int(x) for x in prev_answer_file.readline().split()]
 
     #make output directory
-    if not os.path.exists("../output"):
-        os.makedirs("../output")
+    # if not os.path.exists("../output"):
+    #     os.makedirs("../output")
 
-    for i in xrange(12,NUM_INSTANCES):
+    for i in xrange(236,NUM_INSTANCES):
         try:
-            fout = open("../output/" + str(i+1) + ".out","w")
+            fout = open("../output_michael/" + str(i+1) + ".out","w")
             num_nodes,distances,colors = process_input(str(i+1) + ".in")
             #num_nodes, distances, colors = process_input("6.in") # For testing: 101.in is small
 

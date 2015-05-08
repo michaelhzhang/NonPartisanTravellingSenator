@@ -9,9 +9,28 @@ Sky Cao
 
 Algorithm Description:
 
+The first algorithm we implemented was the ant colony system (ACS), which was a near replica of the method outlined in the 1997 paper 
+"Ant colony system: a cooperative learning approach to the traveling salesman problem" by M. Dorigo and L. M. Gambardella.
+The rough idea of this is that there are "ants" that traverse the graph, depositing varying amounts of "pheremone" on each edge
+of the graph as they traverse it, where the amounts of pheremones deposited depend on the inverse of the length
+of the ant's current path.
 
+Ants choose their next node to traverse pseudorandomly, either deterministically choosing the outgoing edge with the greatest level
+of pheremone left ("exploitation"), or randomly where the probability of choosing the next edge is 
+proportional to its amount of pheremone ("exploration"). The beginning positions of the ants are randomly determined, and 
+pheremones evaporate over time to insure ants always search new paths.  The idea is that ants will slowly converge
+to the optimal path as pheremones will build up on the shortest path, causing ants to traverse it.
 
+In our algorithm we also ended up implementing local beam search, which we called on randomized paths. First we would generate ten randomized paths (Legal Paths), and then call LocalBeamSearch on them to obtain an optimum, which we would compare to the output of Ant Colonization.
 
+In terms of our LocalBeamSearch, how it worked was as follows:
+We would keep track of the top 10 results found by our algorithm every iteration, and we would iterate a maximum of 50 times per algorithm. In terms of our heuristic we combined the 2-OPT heuristic (http://en.wikipedia.org/wiki/2-opt) as well as two minor ones where we'd switch the direction of a path (ie A->B->C) => (A->C->B). After 50 iterations we would return the best path.
+
+We also ran instances of LocalBeamSearch where we took the output from ACS and used it as an input to Local Search, which would further improve the solution from ACS.
+
+If the number of nodes in a graph was small enough, we used dynamic programming to compute an exact solution. We decided to use DP if the number of nodes was 16 or less. Our DP algorithm was based off the regular TSP DP solution. To modify the algorithm to prevent paths that visit more than 3 cities of the same color consecutively, we added another argument to the subproblem. The subproblem to our DP solution was C(S, c, j): where S is the nodes visited so far, c is the colors of the last 3 cities visited, and j is the current end city. In our recursive relation, we made sure that only valid paths were explored. 
+
+Finally, we hardcoded a guess that teams would make the optimal path 1 -> 2 -> 3 -> ... -> N.
 
 
 
@@ -27,10 +46,25 @@ edges to obtain our inputs.
 
 How our code is organized:
 
+Our input generation file is code/makegraph.py. The function best_graph creates the graph based on 2 parameters -- the number of nodes, and the maximum weight edge that we want in the graph.
 
+The ant colonization code is in ant.py, ant_colony.py, ant_graph.py, and ant_nptsp_runner.py. ant.py corresponds to an ant object, ant_graph corresponds to a corresponding data structure for the TSP graph, and ant_colony actually spawns ant threads and runs the algorithm. ant_nptsp_runner is a class that configures some of the parameters for running the code and is used to run ACS on a new problem. 
 
+LocalSearch.py - This contains 2 important methods (The rest were simply for testing/older iterations). The first method is RandomStartLocalSearch which takes in a Graph as input and generates 10 random paths and calls localBeamSearch on them, returning the best path.
+
+The second method is localBeamSearch which takes in a Graph and a Path and attempts to find the best solution as described in Algorithm Description.
+
+Our DP algorithm is contained within dp.py. The main function for dp.py, nptsp_dp(), is called within compute_paths.py when the number of nodes in the instance is less than 17. 
+
+Our code is run together in compute_paths.py, which handles file I/O and calls into each of the various algorithms, taking the best result when we run multiple. Each of us ran slightly different versions of compute_paths on different machines, and we combined the results using combint_outputs.py.
 
 
 
 Libraries used:
+
+The ant colonization code was largely based off of the code available at https://github.com/trevlovett/Python-Ant-Colony-TSP-Solver 
+
+Python Itertools
+
+
 
